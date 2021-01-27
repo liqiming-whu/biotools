@@ -92,7 +92,7 @@ class Intron:
         return "\t".join(str(getattr(self, s)) for s in self.__slots__)
 
 
-class GTF(object):
+class GTF:
     __slots__ = ['seqname', 'source', 'feature', 'start', 'end', 'score',
                     'strand', 'frame', 'attributes', 'chrom']
 
