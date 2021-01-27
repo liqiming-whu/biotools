@@ -113,7 +113,7 @@ def main(gtf, attribute_id, feature, outformat):
     if outformat == 'bed12':
         cds = dict()
         for k, group in groupby(reader(gtf, header=GTF, skip_while = lambda toks: toks[0].startswith("#") or not (toks[2] == 'CDS' or toks[2] == 'stop_codon')), lambda x: parse_attr.findall(x.attributes)[0]):
-            gtfs = list(sorted(group, key=lambda gtf: int(gtf.start)))
+            gtfs = list(sorted(group, key=lambda gtf: gtf.start))
             thickStart = gtfs[0].start - 1
             thickEnd = gtfs[-1].end
             cds[k] = (thickStart, thickEnd)
@@ -123,7 +123,7 @@ def main(gtf, attribute_id, feature, outformat):
         assert outformat in ("bed12", "bed6", "intron"), "output file format: {} not support.".format(outformat)
         if outformat == 'bed12':
             bed = None
-            for gtf_entry in sorted(group, key=lambda gtf: int(gtf.start)):
+            for gtf_entry in sorted(group, key=lambda gtf: gtf.start):
                 assert gtf_entry.feature == feature
                 if not bed:
                     try:
@@ -141,7 +141,7 @@ def main(gtf, attribute_id, feature, outformat):
                 print(bed)
         if outformat == 'intron':
             exons = []
-            for gtf_entry in sorted(group, key=lambda gtf: int(gtf.start)):
+            for gtf_entry in sorted(group, key=lambda gtf: gtf.start):
                 assert gtf_entry.feature == feature
                 exons.append(gtf_entry)
             assert len(exons) > 0
