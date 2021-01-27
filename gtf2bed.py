@@ -7,15 +7,16 @@ from itertools import groupby
 
 def reader(fname, header=None, sep="\t", skip_while=None):
     sep = re.compile(sep)
-    for line in open(fname):
-        toks = sep.split(line.rstrip("\r\n"))
-        if skip_while:
-            if skip_while(toks):
-                continue
-        if header:
-            yield header(toks)
-        else:
-            yield toks
+    with open(fname) as f:
+        for line in f:
+            toks = sep.split(line.rstrip("\r\n"))
+            if skip_while:
+                if skip_while(toks):
+                    continue
+            if header:
+                yield header(toks)
+            else:
+                yield toks
 
 class Bed6:
     """Convert GTF to Bed6."""
