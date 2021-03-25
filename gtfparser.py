@@ -269,7 +269,7 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     p.add_argument('gtf', help="gtf file download from Genecode.")
-    p.add_argument('--attribute', dest='attr', help="""
+    p.add_argument('--attribute', dest='attr', default='transcript_id', help="""
     attribute ID by which to group bed entries.
     'gene_id' or 'gene_name' for gene.bed6, gene_info
     'transcript_id' for genome.bed12, exon, intron, transcrpt_info
