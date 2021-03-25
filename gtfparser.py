@@ -28,6 +28,19 @@ def parse_attributes(term, attributes):
         return 'NA'
 
 
+class Alias:
+    def __init__(self, data):
+        self.data = data
+
+    def update(self, data):
+        self.data = data
+
+    def __repr__(self):
+        return str(self.data)
+
+    __str__ = __repr__
+
+
 class TransInfo:
     """Get transcript info"""
     __slots__ = ["transcript_id", "transcript_name", "transcript_type",
@@ -105,12 +118,16 @@ class Bed12:
     def __init__(self, gtf, attr, thickStart, thickEnd):
         self.chrom = gtf.chrom
         self.start = gtf.start - 1
-        self.end = gtf.end
+        self.end = Alias(gtf.end)
         self.name = attr
         self.score = 0 if gtf.score == '.' else int(gtf.score)
         self.strand = gtf.strand
-        self.thickStart = thickStart if thickStart else self.start
-        self.thickEnd = thickEnd if thickEnd else self.start
+        if thickStart and thickEnd:
+            self.thickStart = thickStart
+            self.thickEnd = thickEnd
+        else:
+            self.thickStart = self.end
+            self.thickEnd = self.end       
         self.itemRgb = 0
         self.blockCount = 1
         self.blockSizes = "{size},".format(size=gtf.end - gtf.start + 1)
@@ -124,7 +141,7 @@ class Bed12:
         return "\t".join(str(getattr(self, s)) for s in self.__slots__)
 
     def add_exon(self, gtf):
-        self.end = gtf.end
+        self.end.update(gtf.end)
         self.blockSizes += "{size},".format(size=gtf.end - gtf.start + 1)
         self.blockStarts += "{start},".format(start=gtf.start - 1 - self.start)
         self.blockCount += 1
