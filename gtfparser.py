@@ -268,17 +268,18 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    p.add_argument('gtf', help="gtf file sorted and grouped by `attr`.")
-    p.add_argument('attr', help="""
-    attribute ID by which to group bed12 entries.
-    'gene_id' or 'gene_name' for gene.bed6,
-    'transcript_id' for exon.bed12.
+    p.add_argument('gtf', help="gtf file download from Genecode.")
+    p.add_argument('--attribute', dest='attr', help="""
+    attribute ID by which to group bed entries.
+    'gene_id' or 'gene_name' for gene.bed6, gene_info
+    'transcript_id' for genome.bed12, exon, intron, transcrpt_info
     """)
-    p.add_argument('--feature-type', dest='feature', default='exon', help="""
-    feature type to join -- all others are filtered out.
-    'exon' for transcript_id, 'gene' for gene_id.
+    p.add_argument('--type', dest='feature', default='exon', help="""
+    annotation type to join, all others are filtered out:
+    'exon' genome.bed12, exon, intron, 'gene' for gene.bed6, gene_info,
+    'transcript' for transcript_info.
     """)
-    p.add_argument('--outfile-format', dest='outformat', default='bed12', help="""
+    p.add_argument('--format', dest='outformat', default='bed12', help="""
     choose output file format:bed12, bed6, intron, info
     """)
     args = p.parse_args()
