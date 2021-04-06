@@ -98,7 +98,7 @@ class Bed6:
         self.start = gtf.start - 1
         self.end = gtf.end
         self.name = attr
-        self.score = 0 if gtf.score == '.' else int(gtf.score)
+        self.score = gtf.score
         self.strand = gtf.strand
 
     def __repr__(self):
@@ -127,7 +127,7 @@ class Bed12:
             self.thickEnd = thickEnd
         else:
             self.thickStart = self.end
-            self.thickEnd = self.end       
+            self.thickEnd = self.end
         self.itemRgb = 0
         self.blockCount = 1
         self.blockSizes = "{size},".format(size=gtf.end - gtf.start + 1)
@@ -157,7 +157,7 @@ class Intron:
         self.end = exon_2.start - 1
         assert self.end >= self.start
         self.name = attr
-        self.score = 0
+        self.score = '.'
         self.strand = exon_1.strand
 
     def __repr__(self):
