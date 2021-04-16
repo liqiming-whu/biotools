@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
-calculate fragment size for each gene/transcript.
+Calculate fragment sizes for mapped bam file.
+Author: liqiming@whu.edu.cn
 '''
 
 import os
@@ -175,9 +176,9 @@ if __name__ == "__main__":
                         help="Minimum mapping quality (phred scaled) for an alignment to be called \"uniquely mapped\"")
     parser.add_argument("-n", "--frag-num", dest="fragment_num", type=int, default=1,
                         help="Minimum number of fragment")
-    parser.add_argument("-b", "--bed_out", dest="filtered_bed", type=str, default=os.devnull,
+    parser.add_argument("-b", "--bed_filtered", dest="filtered_bed", type=str, default=os.devnull,
                         help="Output file to store filtered 12-column transcipt BED")
-    parser.add_argument("-f", "--filtered", dest="filtered_gtf", type=str, default=os.devnull,
+    parser.add_argument("-f", "--filtered_gtf", dest="filtered_gtf", type=str, default=os.devnull,
                         help="Output file to store filtered GTF file, support *.gz")
     parser.add_argument("-t", "--temp", dest="temp_file", type=str, default=os.devnull,
                         help="Output file to store processing data, support *.gz")
