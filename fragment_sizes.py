@@ -4,18 +4,19 @@ calculate fragment size for each gene/transcript.
 '''
 
 import os
+import re
 import sys
 import gzip
 import pysam
 import argparse
 import pandas as pd
+from itertools import groupby
 from collections import Counter
 
 
 class GTF:
     __slots__ = ['seqname', 'source', 'feature', 'start', 'end', 'score',
-                 'strand', 'frame', 'attributes', 'chrom', 'gene_id',
-                 'transcript_id', 'size']
+                 'strand', 'frame', 'attributes', 'chrom', 'size']
 
     def __init__(self, args):
         for s, v in zip(self.__slots__[:9], args):
@@ -60,7 +61,7 @@ def reader(fname, header=None, sep="\t", skip_while=None):
 
 def filter_transcript(gtffile, method, filtered_file=os.devnull):
     assert method in (
-        "first", "last", "max_len" "min_len"), f"{method} not support"
+        "first", "last", "max_len", "min_len"), f"{method} not support"
     transcript_idlist = []
     for _, group in groupby(
         reader(
@@ -73,9 +74,9 @@ def filter_transcript(gtffile, method, filtered_file=os.devnull):
     ):
         transcript = None
         if method == 'first':
-            transcript = group[0]
+            transcript = list(group)[0]
         elif method == 'last':
-            transcript = group[-1]
+            transcript = list(group)[-1]
         elif method == 'max_len':
             transcript = max(group, key=lambda x: x.size)
         else:
