@@ -4,7 +4,7 @@ import argparse
 import pandas as pd
 
 
-def df_merge_row(df, by=None, columns=None, method="distinct", sep=",", count=False, count_distinct=False):
+def df_merge_row(df, by=None, columns=None, method="distinct", sep=",", count=False):
     if not columns:
         return df.drop_duplicates(subset=by, keep='first')
 
@@ -33,22 +33,22 @@ def df_merge_row(df, by=None, columns=None, method="distinct", sep=",", count=Fa
                 data[c] = series.to_list()[0]
             elif m == 'last':
                 data[c] = series.to_list()[-1]
+            elif m == 'count':
+                data[c] = series.count()
+            elif m == 'count_distinct':
+                data[c] = pd.Series(series.unique()).count()
             else:
                 if c not in data:
                     data[c] = sep.join(map(str, series.unique()))
-
-            if count:
-                data["count"] = series.count()
-            if count_distinct:
-                series = pd.Series(series.unique())
-                data["count_distinct"] = series.count()
+        if count:
+            data["count"] = len(x[columns[0]])
         return pd.Series(data)
 
     merge_df = df.groupby(by).apply(generate_content).reset_index()
     return merge_df
 
 
-def main(inpath, outpath, header, by, columns=None, method="distinct", sep="\t", delim=",", count=False, count_distinct=False):
+def main(inpath, outpath, header, by, columns=None, method="distinct", sep="\t", delim=",", count=False):
     if inpath.endswith(".xlsx"):
         df = pd.read_excel(inpath, header=header)
     else:
@@ -66,8 +66,6 @@ def main(inpath, outpath, header, by, columns=None, method="distinct", sep="\t",
             output_name = [df.columns[int(i)] for i in sorted(by + columns)]
             if count:
                 output_name.append("count")
-            if count_distinct:
-                output_name.append("count_distinct")
         except Exception:
             column_name = None
             output_name = by_name
@@ -77,14 +75,11 @@ def main(inpath, outpath, header, by, columns=None, method="distinct", sep="\t",
         if len(method) == 1:
             method = len(column_name) * method
         assert len(column_name) == len(method)
-        output_name = df.columns
+        output_name = df.columns.to_list()
         if count:
             output_name.append("count")
-        if count_distinct:
-            output_name.append("count_distinct")
 
-    out_df = df_merge_row(df, by_name, column_name,
-                          method, delim, count, count_distinct)
+    out_df = df_merge_row(df, by_name, column_name, method, delim, count)
     out_df = out_df[output_name]
 
     out_header = True if header is not None else False
@@ -121,7 +116,7 @@ if __name__ == "__main__":
                               "If an illegal parameter is set, no other columns will be appended to the output table."))
     parser.add_argument("-m", dest="method", type=str, default="distinct",
                         help=("Specify the operation that should be applied to -c. "
-                              "Valid operations: sum, min, max, mean, median, collapse, distinct, first, last. "
+                              "Valid operations: sum, min, max, mean, median, collapse, distinct, first, last, count, count_distinct. "
                               "use ',' to separate."))
     parser.add_argument("-sep", dest="sep", type=str, default="\t",
                         help="Specify a custom delimiter to separate the input file.")
@@ -129,8 +124,6 @@ if __name__ == "__main__":
                         help="Specify a custom delimiter for the collapse operations.")
     parser.add_argument("-count", dest="count", action="store_true",
                         help="Add a count column to the output table.")
-    parser.add_argument("-count_distinct", dest="count_distinct", action="store_true",
-                        help="Add a count_distinct column to the output table.")
     args = parser.parse_args()
 
     main(**args.__dict__)
