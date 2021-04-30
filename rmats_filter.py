@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+A tool for rmats output.
+Author: liqiming@whu.edu.cn
+"""
 import os
 import sys
 import argparse

@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+Remove duplicated rows of the table by specified columns and keep the contents of other columns.
+Author: liqiming@whu.edu.cn
+"""
 import sys
 import argparse
 import pandas as pd
