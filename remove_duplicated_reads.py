@@ -44,7 +44,7 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-r1", dest="input1",
                         type=str, required=True, help="input read1.fq.gz")
-    parser.add_argument("-r2", dest="input1",
+    parser.add_argument("-r2", dest="input2",
                         type=str, required=True, help="input read2.fq.gz")
     parser.add_argument("-o1", dest="output1",
                         type=str, required=True, help="output read1.fq.gz")
