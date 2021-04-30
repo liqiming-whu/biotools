@@ -3,7 +3,6 @@
 Calculate fragment sizes for mapped bam file.
 Author: liqiming@whu.edu.cn
 '''
-
 import os
 import re
 import sys
