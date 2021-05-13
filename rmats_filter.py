@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-A tool for rmats output.
-Author: liqiming@whu.edu.cn
-"""
 import os
 import sys
 import argparse
@@ -22,7 +18,8 @@ def main(inf, outf, topnumber, p_value=0.05, fdr_value=None, inclevel=None):
     df.sort_values(by=['sort_key', 'FDR'], ascending=[False, True], inplace=True)
     df.drop('sort_key', axis=1, inplace=True)
 
-    df = df[:topnumber]
+    if topnumber:
+        df = df[:topnumber]
     df.to_csv(outf, sep="\t", index=False)
 
     print(f"{df.shape[0]} lines.")
@@ -39,11 +36,11 @@ if __name__ == '__main__':
     parser.add_argument("-p", "--pvalue", dest="pvalue",
                         type=float, default=0.05, help="Pvalue cutoff")
     parser.add_argument("-f", "--fdr", dest="fdr",
-                        type=float, help="FDR value cutoff")
+                        type=float, default=None, help="FDR value cutoff")
     parser.add_argument("-l", "--inclevel", dest="inclevel",
-                        type=float, help="IncLevel Difference cutoff")
+                        type=float, default=0.01, help="IncLevel Difference cutoff")
     parser.add_argument("-n", "--number", dest="topnumber",
-                        type=int, default=50, help="How many records to save")
+                        type=int, default=None, help="How many records to save")
 
     args = parser.parse_args()
 
