@@ -11,7 +11,6 @@ def main(inf, outf, topnumber, p_value=None, readnumber=None, fdr_value=None, in
         df = df[df['FDR'] < fdr_value]
     if inclevel:
         df = df[abs(df['IncLevelDifference']) > inclevel]
-    
     if readnumber:
         df['ReadNumber'] = df['IJC_SAMPLE_1'] + df['SJC_SAMPLE_1'] + df['IJC_SAMPLE_2'] + df['SJC_SAMPLE_2']
         df = df[df['ReadNumber'] > readnumber]
@@ -27,7 +26,7 @@ def main(inf, outf, topnumber, p_value=None, readnumber=None, fdr_value=None, in
     if outf:
         df.to_csv(outf, sep="\t", index=False)
 
-    print(f"{df.shape[0]} lines.")
+    print(f"{outf}: {df.shape[0]} genes.")
 
 
 if __name__ == '__main__':
@@ -51,5 +50,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    main(args.input_file, args.output_file, args.topnumber, args.readnumber,
-         args.pvalue, args.fdr, args.inclevel)
+    main(args.input_file, args.output_file, args.topnumber, args.pvalue,
+         args.readnumber, args.fdr, args.inclevel)
